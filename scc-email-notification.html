@@ -3,7 +3,7 @@
 <link rel="import" href="css/style.html">
 
 <!-- Defines element markup -->
-<dom-module id="scc-notification">
+<dom-module id="scc-email-notification">
     <template>
         <style include="notification-styles"></style>
         <template is="dom-if" if="{{messages.length>0}}">
@@ -39,7 +39,7 @@
     <!-- Registers custom element -->
     <script>
         Polymer({
-            is: 'scc-notification',
+            is: 'scc-email-notification',
 
             properties: {
                 apiEndPoint: {
