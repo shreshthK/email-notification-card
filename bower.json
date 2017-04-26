@@ -1,0 +1,18 @@
+{
+    "name": "email-notification-card",
+    "version": "1.0.0",
+    "description": "email-notification-card",
+    "license": "MIT",
+    "main": "scc-email-notification.html",
+    "keywords": [
+        "polymer",
+        "web-components"
+    ],
+    "ignore": [
+        "**/.*",
+        "bower_components"
+    ],
+    "dependencies": {
+        "polymer": "Polymer/polymer#^1.0.0"
+    }
+}
