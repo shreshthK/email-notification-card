@@ -7,33 +7,24 @@
     <template>
         <style include="notification-styles"></style>
         <template is="dom-if" if="{{messages.length>0}}">
-            <div class="notification-container">
-                <div class="notification-cards">
-                    <template is="dom-repeat" items="{{messages}}" as="message" index-as="index">
-                            <a class="notification-card" href="#">
-                                <span class="notification-card-header" style="background-image: url(./image/email.png);">
-                                    <span class="notification-card-title">
-                                        <h3>Email Notification</h3>
-                                    </span>
-                                </span>
-                                <span class="notification-card-summary">
-                                    {{message.message}}
-                                </span>        
-                                <template is="dom-if" if="{{messages.fileFlag}}">
-                                    <span class="notification-card-meta">
-                                        Click to download file
-                                    </span>
-                                </template>
-    <template is="dom-if" if="{{!messages.fileFlag}}">
-                                    <span class="notification-card-meta">
-                                        Nothing to download file
-                                    </span>
-                                </template>
-    </a>
-    </template>
-    </div>
-    </div>
-    </template>
+            <div class="notification-cards">
+                <template is="dom-repeat" items="{{messages}}" as="message" index-as="index">
+                    <a class="notification-card" href="#" on-click="downloadFile">
+                        <span class="notification-card-header" style="background-image: url(./image/email.png);">
+                            <span class="notification-card-title">
+                                <h3>Notification</h3>
+                            </span>
+                        </span>
+                        <span class="notification-card-summary">
+                            {{message.message}}
+                        </span>        
+                        <span class="notification-card-meta">
+                            {{_bottomLabel(message.fileFlag)}}
+                        </span>
+                    </a>
+                </template>
+            </div>
+        </template>
     </template>
 
     <!-- Registers custom element -->
@@ -45,6 +36,9 @@
                 apiEndPoint: {
                     type: String,
                     observer: '_getMessage'
+                },
+                fileEndPoint: {
+                    type: String
                 },
                 timeOut: {
                     type: Number,
@@ -95,8 +89,52 @@
                     }
                 };
                 xmlhttp.open('GET', this.apiEndPoint, true);
-                xmlhttp.setRequestHeader("Content-type", "application/json; charset=utf-8");
+                xmlhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
                 xmlhttp.send();
+            },
+            /**
+             * set bottom label
+             * @flag
+             */
+            _bottomLabel: function(flag) {
+                if (flag) {
+                    return 'Click to download file';
+                } else {
+                    return 'No file avalaible';
+                }
+            },
+            /**
+             * Downloads file
+             * @event
+             */
+            downloadFile: function(event, detail, sender) {
+                var self = this,
+                    xmlhttp = new XMLHttpRequest(),
+                    file;
+
+                if (event.model.get('message').fileFlag) {
+                    xmlhttp.onreadystatechange = function() {
+                        if (xmlhttp.readyState === 4) {
+                            if (xmlhttp.status === 200) {
+                                file = JSON.parse(xmlhttp.response).data;
+
+                                var anchor = document.createElement('a');
+                                anchor.style.display = 'none';
+                                anchor.setAttribute('id', 'email-document');
+                                anchor.setAttribute('href', file);
+                                anchor.setAttribute('target', '_blank');
+                                anchor.setAttribute("download", "scc-email-notification-file");
+                                document.body.appendChild(anchor);
+                                anchor.click();
+                                document.body.removeChild(anchor);
+                            }
+                        }
+                    };
+
+                    xmlhttp.open('GET', this.fileEndPoint + '?data={"fileId":' + event.model.get('message').id + '}', true);
+                    xmlhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+                    xmlhttp.send();
+                }
             }
         });
     </script>
