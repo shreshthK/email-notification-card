@@ -1,6 +1,6 @@
 {
     "name": "email-notification-card",
-    "version": "1.0.0",
+    "version": "1.1.4",
     "description": "email-notification-card",
     "license": "MIT",
     "main": "scc-email-notification.html",
